@@ -1,0 +1,76 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project xmlns="http://maven.apache.org/POM/4.0.0"
+         xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+         xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+    <parent>
+        <artifactId>loginmodule</artifactId>
+        <groupId>com.cbinterview</groupId>
+        <version>0.0.1-SNAPSHOT</version>
+    </parent>
+    <modelVersion>4.0.0</modelVersion>
+    <artifactId>login-db</artifactId>
+
+    <properties>
+        <sql-maven-plugin.version>1.5</sql-maven-plugin.version>
+    </properties>
+
+    <build>
+        <finalName>${project.artifactId}</finalName>
+
+        <resources>
+            <resource>
+                <directory>src/main/resources</directory>
+                <filtering>true</filtering>
+            </resource>
+        </resources>
+
+        <plugins>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>properties-maven-plugin</artifactId>
+                <version>1.0-alpha-2</version>
+                <executions>
+                    <execution>
+                        <phase>initialize</phase>
+                        <goals>
+                            <goal>read-project-properties</goal>
+                        </goals>
+                        <configuration>
+                            <files>
+                                <file>${basedir}/src/main/resources/config/localhost.properties</file>
+                            </files>
+                        </configuration>
+                    </execution>
+                </executions>
+            </plugin>
+
+            <plugin>
+                <groupId>org.codehaus.mojo</groupId>
+                <artifactId>sql-maven-plugin</artifactId>
+                <version>${sql-maven-plugin.version}</version>
+                <dependencies>
+                    <dependency>
+                        <groupId>org.postgresql</groupId>
+                        <artifactId>postgresql</artifactId>
+                        <version>${postgresql.driver.version}</version>
+                    </dependency>
+
+
+                </dependencies>
+
+                <configuration>
+                    <driver>${postgresql.driver.name}</driver>
+                    <url>jdbc:postgresql://${server.host}:${server.port}/${database.name}</url>
+                    <username>${database.user}</username>
+                    <password>${database.password}</password>
+                    <autocommit>true</autocommit>
+                    <onError>abort</onError>
+                </configuration>
+            </plugin>
+
+        </plugins>
+
+    </build>
+
+</project>
