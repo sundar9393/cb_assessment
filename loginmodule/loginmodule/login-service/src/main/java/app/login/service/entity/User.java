@@ -1,18 +1,44 @@
-package app.login.api.model;
+package app.login.service.entity;
 
-public class RegisterRequest {
+import javax.persistence.*;
+import javax.validation.constraints.NotNull;
 
-    String firstName;
+@Entity
+@Table(name = "user")
+public class User {
 
-    String lastName;
 
-    String mobileNumber;
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    @Column(name = "id")
+    private Integer id;
 
-    String role;
+    @NotNull
+    private String firstName;
 
-    String address;
+    @NotNull
+    private String lastName;
 
-    public RegisterRequest() {
+    @NotNull
+    private String mobileNumber;
+
+    @NotNull
+    private String role;
+
+    @NotNull
+    private String address;
+
+    public User() {
+    }
+
+
+
+    public User(String firstName, String lastName, String mobileNumber, String role, String address) {
+        this.firstName = firstName;
+        this.lastName = lastName;
+        this.mobileNumber = mobileNumber;
+        this.role = role;
+        this.address = address;
     }
 
     public String getFirstName() {
