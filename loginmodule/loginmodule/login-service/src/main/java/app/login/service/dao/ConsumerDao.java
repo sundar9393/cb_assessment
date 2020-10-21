@@ -23,8 +23,6 @@ public class ConsumerDao {
             return consumer;
         } catch (NoResultException nre) {
             return null;
-        } catch (Exception e) {
-            return null;
         }
     }
 

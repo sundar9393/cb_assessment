@@ -48,7 +48,7 @@ public class LoginController {
         if(null == consumer) {
             return new ResponseEntity<Consumer>(new Consumer(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<Consumer>(consumer, HttpStatus.CREATED);
+        return new ResponseEntity<Consumer>(consumer, HttpStatus.OK);
     }
 
 
