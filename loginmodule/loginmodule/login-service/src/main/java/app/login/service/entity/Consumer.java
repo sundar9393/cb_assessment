@@ -4,8 +4,13 @@ import javax.persistence.*;
 import javax.validation.constraints.NotNull;
 
 @Entity
-@Table(name = "user")
-public class User {
+@Table(name = "consumer")
+@NamedQueries(
+        {
+                @NamedQuery(name = "consumerByContactNumber", query = "SELECT c from Consumer c where c.mobileNumber = :contactNumber")
+        }
+)
+public class Consumer {
 
 
     @Id
@@ -14,26 +19,31 @@ public class User {
     private Integer id;
 
     @NotNull
+    @Column(name = "firstname")
     private String firstName;
 
     @NotNull
+    @Column(name = "lastname")
     private String lastName;
 
     @NotNull
+    @Column(name = "mobile_number")
     private String mobileNumber;
 
     @NotNull
+    @Column(name = "role")
     private String role;
 
     @NotNull
+    @Column(name = "address")
     private String address;
 
-    public User() {
+    public Consumer() {
     }
 
 
 
-    public User(String firstName, String lastName, String mobileNumber, String role, String address) {
+    public Consumer(String firstName, String lastName, String mobileNumber, String role, String address) {
         this.firstName = firstName;
         this.lastName = lastName;
         this.mobileNumber = mobileNumber;

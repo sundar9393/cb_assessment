@@ -1,8 +1,8 @@
 package app.login.api.controller;
 
 import app.login.api.model.RegisterRequest;
-import app.login.service.business.UserService;
-import app.login.service.entity.User;
+import app.login.service.business.ConsumerService;
+import app.login.service.entity.Consumer;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
@@ -14,29 +14,41 @@ import org.springframework.web.bind.annotation.*;
 public class LoginController {
 
     @Autowired
-    UserService userService;
+    ConsumerService consumerService;
 
     //Register user
+    /*
+    this api will add a new user to the DB if it doesn't exist
+     */
     @PostMapping(path = "register", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> register(@RequestBody(required = true)RegisterRequest registerRequest) {
+    public ResponseEntity<Consumer> register(@RequestBody(required = true)RegisterRequest registerRequest) {
 
-        User newUser = new User(registerRequest.getFirstName(),registerRequest.getLastName(),
-                registerRequest.getMobileNumber(),registerRequest.getRole(), registerRequest.getAddress());
+        if(null == consumerService.isValidUSer(registerRequest.getMobileNumber())) {
+            Consumer newConsumer = new Consumer(registerRequest.getFirstName(),registerRequest.getLastName(),
+                    registerRequest.getMobileNumber(),registerRequest.getRole(), registerRequest.getAddress());
 
-        User registeredUser = userService.registerUser(newUser);;
-        return new ResponseEntity<User>(registeredUser, HttpStatus.CREATED);
+            //call to service layer
+            Consumer registeredConsumer = consumerService.registerUser(newConsumer);;
+            return new ResponseEntity<Consumer>(registeredConsumer, HttpStatus.CREATED);
+        } else {
+            return new ResponseEntity<Consumer>(new Consumer(), HttpStatus.CONFLICT);
+        }
+        //Create a new user object from the request
+
     }
 
     //loginReq
+    /*
+    checks whether the user is already present in system before using google sso
+     */
     @GetMapping(path = "login/{phnNum}", produces = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<User> login(@PathVariable(name = "phnNum") final String phoneNum) {
+    public ResponseEntity<Consumer> login(@PathVariable(name = "phnNum") final String phoneNum) {
 
-
-        User user = userService.isValidUSer(phoneNum);
-        if(null == user) {
-            return new ResponseEntity<User>(new User(), HttpStatus.NOT_FOUND);
+        Consumer consumer = consumerService.isValidUSer(phoneNum);
+        if(null == consumer) {
+            return new ResponseEntity<Consumer>(new Consumer(), HttpStatus.NOT_FOUND);
         }
-        return new ResponseEntity<User>(user, HttpStatus.CREATED);
+        return new ResponseEntity<Consumer>(consumer, HttpStatus.CREATED);
     }
 
 

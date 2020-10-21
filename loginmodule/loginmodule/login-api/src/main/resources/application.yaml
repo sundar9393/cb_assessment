@@ -1,0 +1,24 @@
+server:
+  port: 8085
+  servlet:
+    port: 8085x
+    contextPath: /login/api
+
+spring:
+
+  application:
+    name: login-module
+
+  datasource:
+    driverClassName: org.postgresql.Driver
+    url: jdbc:postgresql://localhost:5432/loginfeature
+    username: postgres
+    password: jackuboy
+    initialize: true
+  jpa:
+    properties:
+      hibernate:
+        ddl-auto: update
+        temp:
+          use_jdbc_metadata_defaults: false
+    database-platform: org.hibernate.dialect.PostgreSQL9Dialect

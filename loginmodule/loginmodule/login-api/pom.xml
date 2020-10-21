@@ -17,6 +17,7 @@
             <groupId>com.cbinterview</groupId>
             <artifactId>login-service</artifactId>
             <version>${project.version}</version>
+            <scope>compile</scope>
         </dependency>
 
         <dependency>
