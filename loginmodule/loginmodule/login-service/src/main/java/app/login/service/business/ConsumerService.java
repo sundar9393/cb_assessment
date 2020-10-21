@@ -21,8 +21,9 @@ public class ConsumerService {
         return consumerDao.fetchUserByPhone(phoneNumber);
     }
 
+    @Transactional
     public Consumer updateRole(String phoneNumber, String role) {
-        return null;
+        return consumerDao.updateRole(phoneNumber, role);
     }
 
 

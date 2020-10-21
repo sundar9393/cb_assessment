@@ -30,4 +30,10 @@ public class ConsumerDao {
         entityManager.persist(newConsumer);
         return newConsumer;
     }
+
+    public Consumer updateRole(String phoneNum, String role) {
+        Consumer existingUser = fetchUserByPhone(phoneNum);
+        existingUser.setRole(role);
+        return entityManager.merge(existingUser);
+    }
 }

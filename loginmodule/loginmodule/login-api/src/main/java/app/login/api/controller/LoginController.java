@@ -51,5 +51,11 @@ public class LoginController {
         return new ResponseEntity<Consumer>(consumer, HttpStatus.OK);
     }
 
+    public ResponseEntity<Consumer> roleChange(final String phoneNumber, final String newRole) {
+        Consumer updatedConsumer = consumerService.updateRole(phoneNumber, newRole);
+        return new ResponseEntity<>(updatedConsumer, HttpStatus.OK);
+
+    }
+
 
 }
