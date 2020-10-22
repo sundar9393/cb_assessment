@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+    <meta charset="utf-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <title>login</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="google-signin-client_id" content="665455024560-vkegl9qdfkdk7t9el1ruhfubdcdtikut.apps.googleusercontent.com">
+
+    <link rel="stylesheet" href="../css/index.css">
+    <link rel="stylesheet" href="../css/common.css">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+    <script src="https://code.jquery.com/jquery-3.3.1.slim.min.js" integrity="sha384-q8i/X+965DzO0rT7abK41JStQIAqVgRVzpbzo5smXKp4YfRvH+8abtTE1Pi6jizo" crossorigin="anonymous"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.14.3/umd/popper.min.js" integrity="sha384-ZMP7rVo3mIykV+2+9J3UJ46jBk0WLaUAdn689aCwoqbBJiSnjAK/l8WvCWPIPm49" crossorigin="anonymous"></script>
+    <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.1.3/js/bootstrap.min.js" integrity="sha384-ChfqqxuZUCnJSK3+MXmPNIyE6ZbWh2IMqE241rYiqJxyMiZ6OW/JmZQ5stwEULTy" crossorigin="anonymous"></script>
+    <script src="https://apis.google.com/js/platform.js" async defer></script>
+</head>
+
+<body>
+<div id="main_div">
+
+    <div id="header">
+        <span id="logo">Ecommerce App</span>
+        <button type="button" class="header_btn" id="signup_btn" data-toggle="modal" data-target="#exampleModalSignUp">Sign up</button>
+        <button class="header_btn" id="signin_btn" data-toggle="modal" data-target="#exampleModal">Sign in</button>
+        <span id="username" style="display: none; float: right"; font-weight: bold;></span>
+        <button class="header_btn" id="signout_btn" style="display: none" onclick="signOut()">Sign out</button>
+
+        <!-- Sign in Modal -->
+        <div class="modal fade" id="exampleModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="exampleModalLabel">Welcome Back</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group has-error">
+                            <label for="contactNum">Mobile Number</label>
+                            <input type="tel" minlength="10" maxlength="10" class="form-control" required="required" id="contactNum" aria-describedby="contactNum" placeholder="Enter your 10 digit mobile number">
+                        </div>
+
+                        <button class="btn btn-primary" data-onsuccess="onSignIn" id="btn1" onclick="registerCheck()">Sign In</button>
+                        <br><br>
+                        <div id="googlessobtn" class="g-signin2" data-onsuccess="onSignIn" style="display: none"></div>
+                        <p style="font-weight: bold;text-align: center;">Not a member ? <a href="#exampleModalSignUp" data-toggle="modal" data-target="#exampleModalSignUp" data-dismiss="modal">Signup</a></p>
+
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+    </div>
+
+
+</div>
+
+<script>
+
+    var xhr = new XMLHttpRequest();
+
+    function registerCheck() {
+        var phoneNum = document.getElementById('contactNum').value;
+        console.log(phoneNum);
+        xhr.open('GET', "http://localhost:8085/login/api/login/"+phoneNum);
+        xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+        xhr.send();
+        xhr.onreadystatechange = function() {
+            if(xhr.readyState == 4) {
+                if(xhr.status == 200) {
+                    var userDetails = JSON.parse(xhr.responseText);
+                    document.getElementById("exampleModalLabel").innerHTML = "Welcome "+userDetails.firstName+" "+userDetails.lastName;
+                    document.getElementById('googlessobtn').style.display = "block";
+                } else if(xhr.status == 404) {
+                    alert("Please, Sign Up before login");
+                }
+            }
+        }
+    }
+
+    function clear() {
+        $("#contactNum").val("");
+        document.getElementById("exampleModalLabel").innerHTML = "Welcome back!!";
+        document.getElementById('googlessobtn').style.display = "none";
+    }
+
+    $(function () {
+        $(document).on("hidden.bs.modal", "#exampleModal", function () {
+        clear();
+        });
+    });
+
+    function onSignIn(googleUser) {
+        document.getElementById('signout_btn').style.display = "inline";
+        document.getElementById('signin_btn').style.display = "none";
+        document.getElementById('signup_btn').style.display = "none";
+        document.getElementById("username").style.display = "inline";
+        document.getElementById("username").innerHTML = "Welcome "+googleUser.getBasicProfile().getName();
+        var profile = googleUser.getBasicProfile();
+        console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
+        console.log('Name: ' + profile.getName());
+        console.log('Image URL: ' + profile.getImageUrl());
+        console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
+    }
+
+    function signOut() {
+        gapi.auth2.getAuthInstance().signOut().then(function(){
+            console.log('user signed out');
+            document.getElementById('signout_btn').style.display = "none";
+            document.getElementById('signin_btn').style.display = "inline";
+            document.getElementById('signup_btn').style.display = "inline";
+            document.getElementById("username").innerHTML = "";
+            document.getElementById("username").style.display = "none";
+        })
+    }
+
+</script>
+
+</body>
+
+</html>
