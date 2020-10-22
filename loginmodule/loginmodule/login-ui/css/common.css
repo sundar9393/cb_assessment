@@ -1,0 +1,27 @@
+#logo {
+    font-family: 'Montez';
+    font-weight: bold;
+    font-size: xx-large;
+    margin: 2px;
+    text-align: left;
+}
+.header_btn {
+    float: right;
+    background-color: blue;
+    color: white;
+    margin: 5px;
+    font-size: 15px;
+    padding: 8px;
+    width: 100px;
+    font-family: Arial;
+}
+#btn1 {
+    display: block;
+    margin: auto;
+}
+#btn2 {
+    width: 100%;
+    background-color: green;
+    color: white;
+    border: none;
+}
