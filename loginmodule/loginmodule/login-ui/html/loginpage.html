@@ -25,7 +25,7 @@
         <button type="button" class="header_btn" id="signup_btn" data-toggle="modal" data-target="#modalSignUp">Sign up</button>
         <button class="header_btn" id="signin_btn" data-toggle="modal" data-target="#signInModal">Sign in</button>
         <button class="header_btn" id="signout_btn" style="display: none" onclick="signOut()">Sign out</button>
-        <button class="header_btn" id="role_btn" style="display: none" data-toggle="modal" data-target="#roleModal">Change role</button>
+        <button class="header_btn" id="role_btn" style="display: none; width: 150px" data-toggle="modal" data-target="#roleModal">Change role</button>
         <span id="username" style="display: none; float: right; font-weight: bold; margin: 15px" ></span>
 
 
@@ -153,6 +153,7 @@
     var xhr = new XMLHttpRequest();
     var userPhoneNum = "";
     var userRole = "";
+    var googleUname = "";
 
     function registerCheck() {
         var phoneNum = document.getElementById('contactNum').value;
@@ -199,6 +200,7 @@
         var profile = googleUser.getBasicProfile();
         console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
         console.log('Name: ' + profile.getName());
+        googleUname = profile.getName();
         console.log('Image URL: ' + profile.getImageUrl());
         console.log('Email: ' + profile.getEmail()); // This is null if the 'email' scope is not present.
     }
@@ -214,6 +216,7 @@
             document.getElementById("username").style.display = "none";
             userPhoneNum = "";
             userRole = "";
+            googleUname = "";
         })
     }
 
@@ -266,9 +269,17 @@
         if(newRole == userRole) {
         alert("You are already a "+newRole);
         } else {
-
             //do a api call
+            xhr.open('GET', "http://localhost:8085/login/api/role/"+userPhoneNum+"/"+newRole);
+            xhr.setRequestHeader('Content-Type', 'application/json;charset=UTF-8');
+            xhr.send();
             //update the username field
+            xhr.onreadystatechange = function() {
+                if(xhr.readyState == 4 && xhr.status == 200) {
+                    userRole = newRole;
+                    document.getElementById("username").innerHTML = "Welcome "+userRole+", "+googleUname;
+                }
+            }
         }
 
     }
