@@ -25,6 +25,7 @@
         <button type="button" class="header_btn" id="signup_btn" data-toggle="modal" data-target="#modalSignUp">Sign up</button>
         <button class="header_btn" id="signin_btn" data-toggle="modal" data-target="#signInModal">Sign in</button>
         <button class="header_btn" id="signout_btn" style="display: none" onclick="signOut()">Sign out</button>
+        <button class="header_btn" id="role_btn" style="display: none" data-toggle="modal" data-target="#roleModal">Change role</button>
         <span id="username" style="display: none; float: right; font-weight: bold; margin: 15px" ></span>
 
 
@@ -110,6 +111,38 @@
             </div>
         </div>
 
+        <!--role change modal -->
+        <div class="modal fade" id="roleModal" tabindex="-1" role="dialog" aria-labelledby="roleLabel" aria-hidden="true">
+            <div class="modal-dialog" role="document">
+                <div class="modal-content">
+
+                    <div class="modal-header">
+                        <h5 class="modal-title" id="roleLabel">Change your role</h5>
+                        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                            <span aria-hidden="true">&times;</span>
+                        </button>
+                    </div>
+
+                    <div class="modal-body">
+                        <div class="form-group has-error">
+                            <label for="newRole" style="font-weight: bold;">Choose a role:</label>
+                            <select id="newRole" name="role">
+                                <option value="seller">Seller</option>
+                                <option value="buyer">Buyer</option>
+                            </select>
+                        </div>
+
+                        <button type="submit" class="btn btn-primary" id="btn3" onclick="changeRole()">Change role</button>
+                    </div>
+
+                    <div class="modal-footer">
+
+                    </div>
+                </div>
+
+            </div>
+        </div>
+
     </div>
 
 
@@ -118,6 +151,8 @@
 <script>
 
     var xhr = new XMLHttpRequest();
+    var userPhoneNum = "";
+    var userRole = "";
 
     function registerCheck() {
         var phoneNum = document.getElementById('contactNum').value;
@@ -131,6 +166,7 @@
                     var userDetails = JSON.parse(xhr.responseText);
                     document.getElementById("loginLabel").innerHTML = "Welcome "+userDetails.firstName+" "+userDetails.lastName;
                     document.getElementById('googlessobtn').style.display = "block";
+                    userRole = userDetails.role;
                 } else if(xhr.status == 404) {
                     alert("Please, Sign Up before login");
                     document.getElementById('googlessobtn').style.display = "none";
@@ -138,6 +174,7 @@
             }
         }
     }
+
 
     function clear() {
         $("#contactNum").val("");
@@ -152,11 +189,13 @@
     });
 
     function onSignIn(googleUser) {
+        userPhoneNum = document.getElementById('contactNum').value;
         document.getElementById('signout_btn').style.display = "inline";
+        document.getElementById('role_btn').style.display = "inline";
         document.getElementById('signin_btn').style.display = "none";
         document.getElementById('signup_btn').style.display = "none";
         document.getElementById("username").style.display = "inline";
-        document.getElementById("username").innerHTML = "Welcome "+googleUser.getBasicProfile().getName();
+        document.getElementById("username").innerHTML = "Welcome "+userRole+", "+googleUser.getBasicProfile().getName();
         var profile = googleUser.getBasicProfile();
         console.log('ID: ' + profile.getId()); // Do not send to your backend! Use an ID token instead.
         console.log('Name: ' + profile.getName());
@@ -168,10 +207,13 @@
         gapi.auth2.getAuthInstance().signOut().then(function(){
             console.log('user signed out');
             document.getElementById('signout_btn').style.display = "none";
+            document.getElementById('role_btn').style.display = "none";
             document.getElementById('signin_btn').style.display = "inline";
             document.getElementById('signup_btn').style.display = "inline";
             document.getElementById("username").innerHTML = "";
             document.getElementById("username").style.display = "none";
+            userPhoneNum = "";
+            userRole = "";
         })
     }
 
@@ -218,6 +260,18 @@
         clearSignUpForm();
         });
     });
+
+    function changeRole() {
+        var newRole = document.getElementById('newRole').value;
+        if(newRole == userRole) {
+        alert("You are already a "+newRole);
+        } else {
+
+            //do a api call
+            //update the username field
+        }
+
+    }
 
 </script>
 

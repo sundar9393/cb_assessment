@@ -6,6 +6,5 @@ import org.springframework.context.annotation.Configuration;
 
 @Configuration
 @ComponentScan("app.login.api.controller")
-@ServletComponentScan("app.login.api.filters")
 public class WebConfig {
 }
