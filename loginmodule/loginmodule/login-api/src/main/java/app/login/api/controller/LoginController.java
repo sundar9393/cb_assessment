@@ -52,7 +52,9 @@ public class LoginController {
         return new ResponseEntity<Consumer>(consumer, HttpStatus.OK);
     }
 
-    public ResponseEntity<Consumer> roleChange(final String phoneNumber, final String newRole) {
+    @GetMapping(path = "role/{phnNum}/{newRole}")
+    public ResponseEntity<Consumer> roleChange(@PathVariable(name = "phnNum") final String phoneNumber,
+                                               @PathVariable(name = "newRole") final String newRole) {
         Consumer updatedConsumer = consumerService.updateRole(phoneNumber, newRole);
         return new ResponseEntity<>(updatedConsumer, HttpStatus.OK);
 
